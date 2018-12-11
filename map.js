@@ -1,4 +1,23 @@
+<<<<<<< HEAD
 // Set up base map
+=======
+// load countries object from JSON file
+let request = new XMLHttpRequest();
+request.open('GET', 'data/countries.geo.json', true);
+request.onload = function() {
+  if (request.status >= 200 && request.status < 400) {
+    // save to countries object
+    let countries = JSON.parse(request.responseText);
+  } else {
+    console.log('Error: ' + request.responseText);
+  }
+};
+request.onerror = function() {
+  console.log('Error: ' + request.responseText);
+};
+request.send();
+
+>>>>>>> 51ad1e50ccbfc36c72020a080cff064084a0679f
 let mapboxAccessToken = 'pk.eyJ1Ijoic2F2YW5uYWhqYXkiLCJhIjoiY2pwajI5bWh4MDI5dDNrczkzNjIzbnlsdCJ9.DN9HWckmGunFVtuNFFUakg';
 let map = L.map('map').setView([0,0], 2);
 
