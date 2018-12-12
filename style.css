@@ -13,7 +13,23 @@ body {
   background-color: hsla(0,100%,100%,0.8);
   padding: 20px;
   height: 540px;
+  max-width: 400px;
   margin: 10px;
 }
-
+.dataviewer-info .overall {
+  font-size: 36pt;
+  font-weight: bold;
+  margin: 0;
+}
+.dataviewer-country {
+  font-size: 24pt;
+}
+.two-col {
+  float: left;
+  width: 48%;
+  padding: 1%;
+}
+.dataviewer-sexdata {
+  font-size: 14pt;
+}
 /* create mobile style for data pane */

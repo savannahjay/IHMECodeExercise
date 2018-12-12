@@ -7,41 +7,70 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token='
     attribution: 'Mapbox | IMHE Global Health Data 2018'
 }).addTo(map);
 
-// Initialize geodata object, start with shapes
-const geodata = countryShapes.features;
-
-// Create year data object
-const data2017both = [];
-data.forEach(entry => {
-  if (entry.year == '2017' && entry.sex_id == '3') {
-    data2017both.push(entry);
+// Data class to generate annual data objects
+class AnnualData {
+  constructor(year) {
+    // Construct object in geoJSON, start with country geometry
+    this.type = 'FeatureCollection';
+    this.features = countryShapes.features;
+    // Assign year
+    this.year = year;
+    this.annualdata = [];
   }
-});
+  addDeathRate(data) {
+    // Add death rate data to features array
+    // Create array with matching year data only
+    data.forEach(entry => {
+      if (entry.year == this.year) {
+        this.annualdata.push(entry);
+      }
+    });
+    // Add matching year data to geoJSON features object
+    this.features.forEach(country => {
+      this.annualdata.forEach(entry => {
+        if (entry.location_name === country.properties.ADMIN && entry.sex_id === 3) {
+          country.properties.overallrate = entry.val;
+          country.properties.overallu = entry.upper;
+          country.properties.overalll = entry.lower;
+        } else if (entry.location_name === country.properties.ADMIN && entry.sex_id === 1) {
+          country.properties.malerate = entry.val;
+          country.properties.maleu = entry.upper;
+          country.properties.malel = entry.lower;
+        } else if (entry.location_name === country.properties.ADMIN && entry.sex_id === 2) {
+          country.properties.femalerate = entry.val;
+          country.properties.femaleu = entry.upper;
+          country.properties.femalel = entry.lower;
+        }
+      })
+      if (!country.properties.overallrate) {
+        country.properties.overallrate = 'No Data';
+        country.properties.overallu = 'No Data';
+        country.properties.overalll = 'No Data';
+      }
+    });
+  }
+}
 
-// Merge data object with geoJSON countries
-geodata.forEach(country => {
-  data2017both.forEach(entry => {
-    if (entry.location_name === country.properties.ADMIN) {
-      country.properties.opioiddeathrate = entry.val;
-    }
-  })
-});
-
-// Color country shapes based on death rate data
+// MAP BUILDING FUNCTIONS
+// Color country shapes based on death rate data:
 function getColor(rate) {
-  return "hsl(17,100%," + (rate*100) + "%)";
+  if (typeof rate === 'number') {
+    return "hsl(17,100%," + (100 - rate * 6) + "%)";
+  } else {
+    return "white";
+  }
 }
 // Apply styles to data overlay
-function style(geodata) {
+function style(current) {
   return {
-    fillColor: getColor(geodata.properties.opioiddeathrate),
+    fillColor: getColor(current.properties.overallrate),
     weight: 1,
     opacity: 1,
     color: 'white',
     fillOpacity: 0.7
   };
 }
-
+// Set up choropleth map with hover styles
 let geojson;
 
 function highlightFeature(e) {
@@ -58,7 +87,6 @@ function resetHighlight(e) {
   dataViewer.update();
 }
 
-// Add styled data layer to map
 function onEachFeature(feature, layer) {
   layer.on({
     mouseover: highlightFeature,
@@ -66,11 +94,14 @@ function onEachFeature(feature, layer) {
   });
 }
 
-geojson = L.geoJson(geodata, {
-  style: style,
-  onEachFeature: onEachFeature
-}).addTo(map);
+function buildMap() {
+  geojson = L.geoJson(current, {
+    style: style,
+    onEachFeature: onEachFeature
+  }).addTo(map);
+}
 
+// Add data pane to map view
 let dataViewer = L.control();
 
 dataViewer.onAdd = function (map) {
@@ -79,11 +110,44 @@ dataViewer.onAdd = function (map) {
   return this._div;
 };
 
-// method that we will use to update the control based on feature properties passed
 dataViewer.update = function (props) {
-  this._div.innerHTML = '<h4>Worldwide Rates of Opioid Deaths</h4>' + (props ?
-    '<span>' + props.ADMIN + '</span><br />' + Math.round(100 * props.opioiddeathrate) / 100
+  this._div.innerHTML = '<h2>Worldwide Rates of Opioid Deaths</h2>' + (props ?
+    '<div class="dataviewer-country">' + props.ADMIN + '</div><div class="dataviewer-info"><p class="overall">' +
+    (typeof props.overallrate === 'number' ?
+      Math.round(100 * props.overallrate) / 100 + '%</p>' +
+      '<p>Upper: ' + Math.round(100 * props.overallu) / 100 + '%</p>' +
+      '<p>Lower: ' + Math.round(100 * props.overalll) / 100 + '%</p>' +
+      '<p class="two-col dataviewer-sexdata">Male: ' + Math.round(100 * props.malerate) / 100 + '%</p>' +
+      '<p class="two-col dataviewer-sexdata">Female: ' + Math.round(100 * props.femalerate) / 100 + '%</p></div>'
+      : props.overallrate + '</div>')
     : 'Hover over a country to view data');
 };
 
 dataViewer.addTo(map);
+
+function showSelection() {
+  document.getElementById('data-select').innerHTML = 'View by year: <a onclick="make2017map();" class="data-select-current">2017</a> <a onclick="make2016map();">2016</a>';
+  // if(data select child inner HTML matches current.year) {
+    // assign data-select current class
+  // }
+}
+
+// Create initial instance & display on map
+const data2017 = new AnnualData(2017);
+data2017.addDeathRate(data);
+let current = data2017;
+
+buildMap();
+
+function make2016map() {
+  const data2016 = new AnnualData(2016);
+  data2016.addDeathRate(data);
+  current = data2016;
+  showSelection();
+  buildMap();
+}
+
+function make2017map() {
+  current = data2017;
+  buildMap();
+}
