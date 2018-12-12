@@ -3,7 +3,8 @@ class AnnualData {
   constructor(year) {
     // Construct object in geoJSON, start with country geometry
     this.type = 'FeatureCollection';
-    this.features = countryShapes.features;
+    // Copying countryShapes data for geometry
+    this.features = JSON.parse(JSON.stringify(countryShapes.features));
     // Assign year
     this.year = year;
     this.annualdata = [];
@@ -45,11 +46,15 @@ class AnnualData {
 // Create initial instance & display on map
 const data2017 = new AnnualData(2017);
 data2017.addDeathRate(data);
-console.log(data2017.features[237]);
 
-const data2016 = new AnnualData(2016);
-data2016.addDeathRate(data);
-console.log(data2017.features[237]);
+const data2010 = new AnnualData(2010);
+data2010.addDeathRate(data);
+
+const data2000 = new AnnualData(2000);
+data2000.addDeathRate(data);
+
+const data1990 = new AnnualData(1990);
+data1990.addDeathRate(data);
 
 // MAP BUILDING FUNCTIONS
 // Set up base map
@@ -124,35 +129,16 @@ function buildMapLayer(current) {
 }
 
 let map = L.map('map',{
-  layers: [baseMap,buildMapLayer(data2017)]
+  layers: [baseMap]
 }).setView([0,0], 2);
 
 let overlayMaps = {
     "2017": buildMapLayer(data2017),
-    "2016": buildMapLayer(data2016)
+    "2010": buildMapLayer(data2010),
+    "2000": buildMapLayer(data2000),
+    "1990": buildMapLayer(data1990)
 };
 
-L.control.layers(overlayMaps).addTo(map);
-
-// Add data pane to map view
-// let dataViewer = L.control();
-//
-// dataViewer.onAdd = function (map) {
-//   this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-//   this.update();
-//   return this._div;
-// };
-//
-// dataViewer.update = function (props) {
-//   this._div.innerHTML = '<h2>Worldwide Rates of Opioid Deaths</h2>' + (props ?
-//     '<div class="dataviewer-country">' + props.ADMIN + '</div><div class="dataviewer-info"><p class="overall">' +
-//     (typeof props.overallrate === 'number' ?
-//       Math.round(100 * props.overallrate) / 100 + '%</p>' +
-//       '<p>' + Math.round(100 * props.overalll) / 100 + '% - ' + Math.round(100 * props.overalll) / 100 + '%</p>' +
-//       '<p class="two-col dataviewer-sexdata">Male: ' + Math.round(100 * props.malerate) / 100 + '%</p>' +
-//       '<p class="two-col dataviewer-sexdata">Female: ' + Math.round(100 * props.femalerate) / 100 + '%</p></div>'
-//       : props.overallrate + '</div>')
-//     : 'Click or hover over a country to view data');
-// };
-//
-// dataViewer.addTo(map);
+L.control.layers(overlayMaps, null, {
+  collapsed: false
+}).addTo(map);
