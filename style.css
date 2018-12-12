@@ -12,27 +12,37 @@ body {
 #data-select .current {
   font-weight: bold;
 }
-.info.leaflet-control {
+/* .info.leaflet-control {
   background-color: hsla(0,100%,100%,0.8);
   padding: 20px;
   height: 540px;
   max-width: 400px;
   margin: 10px;
+} */
+.dataviewer-info p {
+  text-align: center;
 }
 .dataviewer-info .overall {
   font-size: 36pt;
   font-weight: bold;
   margin: 0;
 }
+.dataviewer-info .range {
+  margin: 0;
+}
 .dataviewer-country {
   font-size: 24pt;
+  margin: 0;
 }
 .two-col {
-  float: left;
+  display: inline-block;
   width: 48%;
   padding: 1%;
 }
 .dataviewer-sexdata {
-  font-size: 14pt;
+  font-size: 10pt;
+  border-top: 1px solid gray;
+  padding-top: 10px;
+  margin: 10px 0 !important;
 }
 /* create mobile style for data pane */
