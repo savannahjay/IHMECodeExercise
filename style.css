@@ -4,21 +4,34 @@ body {
 #map {
   height: 600px;
   width: 100%;
+  border-top: 5px solid #22889e;
+  border-bottom: 5px solid #22889e;
 }
 #data-select {
   text-align: center;
-  padding-top: 1em;
+  padding: 1em;
+  background-color: #51cee8;
+  color: white;
+}
+#data-select a {
+  text-decoration: none;
+  padding: 1em;
+  border: 1px solid white;
+  color: white;
+}
+#data-select a:hover {
+  background-color: #43a3b7;
+}
+#data-select a:first-of-type {
+  border-left-width: 2px;
+}
+#data-select a:last-of-type {
+  border-right-width: 2px;
 }
 #data-select .current {
   font-weight: bold;
+  background-color: #22889e;
 }
-/* .info.leaflet-control {
-  background-color: hsla(0,100%,100%,0.8);
-  padding: 20px;
-  height: 540px;
-  max-width: 400px;
-  margin: 10px;
-} */
 .dataviewer-info p {
   text-align: center;
 }
@@ -45,4 +58,3 @@ body {
   padding-top: 10px;
   margin: 10px 0 !important;
 }
-/* create mobile style for data pane */

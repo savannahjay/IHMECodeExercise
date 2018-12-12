@@ -1,37 +1,29 @@
 // Data class to generate annual data objects
-class AnnualData {
-  constructor(year) {
+class DataBySex {
+  constructor(sex) {
     // Construct object in geoJSON, start with country geometry
     this.type = 'FeatureCollection';
     // Copying countryShapes data for geometry
     this.features = JSON.parse(JSON.stringify(countryShapes.features));
     // Assign year
-    this.year = year;
-    this.annualdata = [];
+    this.sex = sex;
+    this.sexdata = [];
   }
   addDeathRate(data) {
     // Add death rate data to features array
-    // Create array with matching year data only
+    // Create array with matching sex data only
     data.forEach(entry => {
-      if (entry.year == this.year) {
-        this.annualdata.push(entry);
+      if (entry.year === 2017 && entry.sex_name === this.sex) {
+        this.sexdata.push(entry);
       }
     });
     // Add matching year data to geoJSON features object
     this.features.forEach(country => {
-      this.annualdata.forEach(entry => {
-        if (entry.location_name === country.properties.ADMIN && entry.sex_id === 3) {
+      this.sexdata.forEach(entry => {
+        if (entry.location_name === country.properties.ADMIN) {
           country.properties.overallrate = entry.val;
           country.properties.overallu = entry.upper;
           country.properties.overalll = entry.lower;
-        } else if (entry.location_name === country.properties.ADMIN && entry.sex_id === 1) {
-          country.properties.malerate = entry.val;
-          country.properties.maleu = entry.upper;
-          country.properties.malel = entry.lower;
-        } else if (entry.location_name === country.properties.ADMIN && entry.sex_id === 2) {
-          country.properties.femalerate = entry.val;
-          country.properties.femaleu = entry.upper;
-          country.properties.femalel = entry.lower;
         }
       })
       if (!country.properties.overallrate) {
@@ -44,17 +36,15 @@ class AnnualData {
 }
 
 // Create initial instance & display on map
-const data2017 = new AnnualData(2017);
-data2017.addDeathRate(data);
+const databoth = new DataBySex('Both');
+databoth.addDeathRate(data);
+console.log(databoth);
 
-const data2010 = new AnnualData(2010);
-data2010.addDeathRate(data);
+const datamale = new DataBySex('Male');
+datamale.addDeathRate(data);
 
-const data2000 = new AnnualData(2000);
-data2000.addDeathRate(data);
-
-const data1990 = new AnnualData(1990);
-data1990.addDeathRate(data);
+const datafemale = new DataBySex('Female');
+datafemale.addDeathRate(data);
 
 // MAP BUILDING FUNCTIONS
 // Set up base map
@@ -80,7 +70,7 @@ function buildMapLayer(current) {
       weight: 1,
       opacity: 1,
       color: 'white',
-      fillOpacity: 0.7
+      fillOpacity: 1
     };
   }
   // Set up choropleth map with hover styles
@@ -112,9 +102,7 @@ function buildMapLayer(current) {
       '</div><div class="dataviewer-info"><p class="overall">' +
       ( typeof feature.properties.overallrate === 'number' ?
         Math.round(100 * feature.properties.overallrate) / 100 + '%</p>' +
-          '<p class="range">' + Math.round(100 * feature.properties.overalll) / 100 + '% - ' + Math.round(100 * feature.properties.overallu) / 100 + '%</p>' +
-          '<p class="two-col dataviewer-sexdata">Male:<br/> ' + Math.round(100 * feature.properties.malerate) / 100 + '%</p>' +
-          '<p class="two-col dataviewer-sexdata">Female:<br/> ' + Math.round(100 * feature.properties.femalerate) / 100 + '%</p>'
+          '<p class="range">' + Math.round(100 * feature.properties.overalll) / 100 + '% - ' + Math.round(100 * feature.properties.overallu) / 100 + '%</p>'
           : feature.properties.overallrate )
       + '</div>'
     );
@@ -129,14 +117,13 @@ function buildMapLayer(current) {
 }
 
 let map = L.map('map',{
-  layers: [baseMap]
+  layers: [baseMap, buildMapLayer(databoth)]
 }).setView([0,0], 2);
 
 let overlayMaps = {
-    "2017": buildMapLayer(data2017),
-    "2010": buildMapLayer(data2010),
-    "2000": buildMapLayer(data2000),
-    "1990": buildMapLayer(data1990)
+    "Both": buildMapLayer(databoth),
+    "Male": buildMapLayer(datamale),
+    "Female": buildMapLayer(datafemale)
 };
 
 L.control.layers(overlayMaps, null, {
