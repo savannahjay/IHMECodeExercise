@@ -1,35 +1,3 @@
-// load countries object from JSON file
-let requestCountries = new XMLHttpRequest();
-requestCountries.open('GET', 'https://savannahjay.github.io/IMHECodeExercise/data/countries.geo.json', true);
-requestCountries.onload = function() {
-  if (requestCountries.status >= 200 && requestCountries.status < 400) {
-    // save to countries object
-    let countryShapes = JSON.parse(requestCountries.responseText);
-  } else {
-    console.log('Error: ' + requestCountries.responseText);
-  }
-};
-requestCountries.onerror = function() {
-  console.log('Error: ' + requestCountries.responseText);
-};
-requestCountries.send();
-
-// load data object from JSON file
-let requestData = new XMLHttpRequest();
-requestData.open('GET', 'https://savannahjay.github.io/IMHECodeExercise/data/data.json', true);
-requestData.onload = function() {
-  if (requestData.status >= 200 && requestData.status < 400) {
-    // save to countries object
-    let data = JSON.parse(requestData.responseText);
-  } else {
-    console.log('Error: ' + requestData.responseText);
-  }
-};
-requestData.onerror = function() {
-  console.log('Error: ' + requestData.responseText);
-};
-requestData.send();
-
 // Data class to generate annual data objects
 class AnnualData {
   constructor(year) {
