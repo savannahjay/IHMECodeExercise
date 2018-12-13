@@ -98,8 +98,8 @@ function buildMapLayer(current) {
       feature.properties.name +
       '</div><div class="dataviewer-info"><p class="overall">' +
       ( typeof feature.properties.overallrate === 'number' ?
-        Math.round(100 * feature.properties.overallrate) / 100 + '%</p>' +
-          '<p class="range">' + Math.round(100 * feature.properties.overalll) / 100 + '% - ' + Math.round(100 * feature.properties.overallu) / 100 + '%</p>'
+        Math.round(100 * feature.properties.overallrate) / 100 + '</p>' +
+          '<p class="range">' + Math.round(100 * feature.properties.overalll) / 100 + ' - ' + Math.round(100 * feature.properties.overallu) / 100 + '</p>'
           : feature.properties.overallrate )
       + '</div>'
     );
@@ -127,3 +127,16 @@ let overlayMaps = {
 L.control.layers(overlayMaps, null, {
   collapsed: false
 }).addTo(map);
+
+// Add legend with color gradient for reference
+let legend = L.control({
+  position: 'bottomright'
+});
+
+legend.onAdd = function (map) {
+  let div = L.DomUtil.create('div', 'info legend')
+  div.innerHTML = '<p>Legend</p><div id="legend-gradient"><span class="legend-left">15</span><span class="legend-right">0</span></div>';
+  return div;
+};
+
+legend.addTo(map);
