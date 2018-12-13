@@ -1,19 +1,3 @@
-// load countries object from JSON file
-let request = new XMLHttpRequest();
-request.open('GET', 'https://savannahjay.github.io/IMHECodeExercise/data/countries.geo.json', true);
-request.onload = function() {
-  if (request.status >= 200 && request.status < 400) {
-    // save to countries object
-    let countryShapes = JSON.parse(request.responseText);
-  } else {
-    console.log('Error: ' + request.responseText);
-  }
-};
-request.onerror = function() {
-  console.log('Error: ' + request.responseText);
-};
-request.send();
-
 // Data class to generate annual data objects
 class AnnualData {
   constructor(year) {
@@ -96,7 +80,7 @@ function buildMapLayer(current) {
       weight: 1,
       opacity: 1,
       color: 'white',
-      fillOpacity: 1
+      fillOpacity: 0.7
     };
   }
   // Set up choropleth map with hover styles
