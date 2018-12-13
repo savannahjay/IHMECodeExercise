@@ -61,7 +61,7 @@ data1990.addDeathRate(data);
 let mapboxAccessToken = 'pk.eyJ1Ijoic2F2YW5uYWhqYXkiLCJhIjoiY2pwajI5bWh4MDI5dDNrczkzNjIzbnlsdCJ9.DN9HWckmGunFVtuNFFUakg';
 let baseMap = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + mapboxAccessToken, {
     id: 'mapbox.light',
-    attribution: 'Mapbox | IMHE Global Health Data 2018'
+    attribution: 'Mapbox | IHME Global Health Data 2018'
 });
 
 function buildMapLayer(current) {
