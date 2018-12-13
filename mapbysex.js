@@ -1,3 +1,19 @@
+// load countries object from JSON file
+let request = new XMLHttpRequest();
+request.open('GET', 'https://savannahjay.github.io/IMHECodeExercise/data/countries.geo.json', true);
+request.onload = function() {
+  if (request.status >= 200 && request.status < 400) {
+    // save to countries object
+    let countryShapes = JSON.parse(request.responseText);
+  } else {
+    console.log('Error: ' + request.responseText);
+  }
+};
+request.onerror = function() {
+  console.log('Error: ' + request.responseText);
+};
+request.send();
+
 // Data class to generate annual data objects
 class DataBySex {
   constructor(sex) {
@@ -117,7 +133,7 @@ function buildMapLayer(current) {
 }
 
 let map = L.map('map',{
-  layers: [baseMap, buildMapLayer(databoth)]
+  layers: [baseMap]
 }).setView([0,0], 2);
 
 let overlayMaps = {
