@@ -117,10 +117,11 @@ let map = L.map('map',{
   layers: [baseMap, buildMapLayer(databoth)]
 }).setView([0,0], 2);
 
+// Set up layer selection controls
 let overlayMaps = {
-    "Both": buildMapLayer(databoth),
-    "Male": buildMapLayer(datamale),
-    "Female": buildMapLayer(datafemale)
+  "Both": buildMapLayer(databoth),
+  "Male": buildMapLayer(datamale),
+  "Female": buildMapLayer(datafemale)
 };
 
 L.control.layers(overlayMaps, null, {

@@ -32,6 +32,10 @@ body {
   font-weight: bold;
   background-color: #22889e;
 }
+.leaflet-control-layers-base {
+  font-size: 16px;
+  padding: 10px;
+}
 .dataviewer-info p {
   text-align: center;
 }

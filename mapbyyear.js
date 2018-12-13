@@ -132,11 +132,12 @@ let map = L.map('map',{
   layers: [baseMap, buildMapLayer(data2017)]
 }).setView([0,0], 2);
 
+// Set up layer selection controls
 let overlayMaps = {
-    "2017": buildMapLayer(data2017),
-    "2010": buildMapLayer(data2010),
-    "2000": buildMapLayer(data2000),
-    "1990": buildMapLayer(data1990)
+  "2017": buildMapLayer(data2017),
+  "2010": buildMapLayer(data2010),
+  "2000": buildMapLayer(data2000),
+  "1990": buildMapLayer(data1990)
 };
 
 L.control.layers(overlayMaps, null, {
