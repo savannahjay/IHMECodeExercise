@@ -1,7 +1,7 @@
 # IMHECodeExercise
 
 ## Intro
-I created a choropleth visualization of the data, in order to highlight the geographic variability and make it easy to interpret at a glance. There are two dimensions to explore and compare --- sex and year --- which help the user build understanding of the populations most affected by opioid use disorders.
+I created a choropleth visualization of the data, in order to highlight the geographic variability and make it easy to interpret at a glance. There are two dimensions to explore and compare &mdash; sex and year &mdash; which help the user build understanding of the populations most affected by opioid use disorders.
 
 ## Process and Tools
 The visualization uses Leaflet.js with Mapbox tiles. I referred to the Leaflet documentation and tutorials (particularly GeoJSON, Layers, and Choropleth) to build the map. I used an open source geoJSON object collection to create the country shapes. I also converted the CSV data to JSON.
