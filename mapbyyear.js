@@ -1,3 +1,35 @@
+// load countries object from JSON file
+let requestCountries = new XMLHttpRequest();
+requestCountries.open('GET', 'https://savannahjay.github.io/IMHECodeExercise/data/countries.geo.json', true);
+requestCountries.onload = function() {
+  if (requestCountries.status >= 200 && requestCountries.status < 400) {
+    // save to countries object
+    let countryShapes = JSON.parse(requestCountries.responseText);
+  } else {
+    console.log('Error: ' + requestCountries.responseText);
+  }
+};
+requestCountries.onerror = function() {
+  console.log('Error: ' + requestCountries.responseText);
+};
+requestCountries.send();
+
+// load data object from JSON file
+let requestData = new XMLHttpRequest();
+requestData.open('GET', 'https://savannahjay.github.io/IMHECodeExercise/data/data.json', true);
+requestData.onload = function() {
+  if (requestData.status >= 200 && requestData.status < 400) {
+    // save to countries object
+    let data = JSON.parse(requestData.responseText);
+  } else {
+    console.log('Error: ' + requestData.responseText);
+  }
+};
+requestData.onerror = function() {
+  console.log('Error: ' + requestData.responseText);
+};
+requestData.send();
+
 // Data class to generate annual data objects
 class AnnualData {
   constructor(year) {
@@ -20,15 +52,15 @@ class AnnualData {
     // Add matching year data to geoJSON features object
     this.features.forEach(country => {
       this.annualdata.forEach(entry => {
-        if (entry.location_name === country.properties.ADMIN && entry.sex_id === 3) {
+        if (entry.location_name === country.properties.name && entry.sex_id === 3) {
           country.properties.overallrate = entry.val;
           country.properties.overallu = entry.upper;
           country.properties.overalll = entry.lower;
-        } else if (entry.location_name === country.properties.ADMIN && entry.sex_id === 1) {
+        } else if (entry.location_name === country.properties.name && entry.sex_id === 1) {
           country.properties.malerate = entry.val;
           country.properties.maleu = entry.upper;
           country.properties.malel = entry.lower;
-        } else if (entry.location_name === country.properties.ADMIN && entry.sex_id === 2) {
+        } else if (entry.location_name === country.properties.name && entry.sex_id === 2) {
           country.properties.femalerate = entry.val;
           country.properties.femaleu = entry.upper;
           country.properties.femalel = entry.lower;
@@ -80,7 +112,7 @@ function buildMapLayer(current) {
       weight: 1,
       opacity: 1,
       color: 'white',
-      fillOpacity: 0.7
+      fillOpacity: 1
     };
   }
   // Set up choropleth map with hover styles
@@ -108,7 +140,7 @@ function buildMapLayer(current) {
     });
     layer.bindPopup(
       '<div class="dataviewer-country">' +
-      feature.properties.ADMIN +
+      feature.properties.name +
       '</div><div class="dataviewer-info"><p class="overall">' +
       ( typeof feature.properties.overallrate === 'number' ?
         Math.round(100 * feature.properties.overallrate) / 100 + '%</p>' +
@@ -129,7 +161,7 @@ function buildMapLayer(current) {
 }
 
 let map = L.map('map',{
-  layers: [baseMap]
+  layers: [baseMap, buildMapLayer(data2017)]
 }).setView([0,0], 2);
 
 let overlayMaps = {
