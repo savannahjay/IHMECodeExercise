@@ -1,4 +1,4 @@
-# IMHECodeExercise
+# IHMECodeExercise
 
 ## Intro
 I created a choropleth visualization of the data, in order to highlight the geographic variability and make it easy to interpret at a glance. There are two dimensions to explore and compare &mdash; sex and year &mdash; which help the user build understanding of the populations most affected by opioid use disorders.
