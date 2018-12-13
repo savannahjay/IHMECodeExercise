@@ -38,7 +38,6 @@ class DataBySex {
 // Create initial instance & display on map
 const databoth = new DataBySex('Both');
 databoth.addDeathRate(data);
-console.log(databoth);
 
 const datamale = new DataBySex('Male');
 datamale.addDeathRate(data);
